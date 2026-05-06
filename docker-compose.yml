@@ -1,4 +1,40 @@
 services:
+
+  qwen-text:
+    image: ghcr.io/ggml-org/llama.cpp:server-cuda
+    container_name: qwen3-4b-text
+    ports:
+      - "8040:8040"
+    volumes:
+      - ./models:/models
+    command: >
+      --model /models/qwen3-4b/Qwen3-4B-Q4_K_M.gguf
+      --n-gpu-layers 99
+      --ctx-size 32768
+      --flash-attn on
+      --cache-type-k q8_0
+      --cache-type-v q8_0
+      --port 8040
+      --host 0.0.0.0
+      --batch-size 512
+      --ubatch-size 128
+      --parallel 4
+      --cont-batching
+      --no-warmup
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8040/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
   qwen:
     image: ghcr.io/ggml-org/llama.cpp:server-cuda
     container_name: qwen2-5-vl

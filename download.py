@@ -12,6 +12,11 @@ models_to_download = [
         'repo_id': 'openai/clip-vit-base-patch32',
         'files': ['config.json', 'pytorch_model.bin', 'preprocessor_config.json', 'vocab.json'],
         'local_dir': '/home/paperspace/ai-server/models/clip-vit-base-patch32'
+    },
+    {
+        'repo_id': 'unsloth/Qwen3-4B-GGUF',
+        'files': ['Qwen3-4B-Q4_K_M.gguf'],
+        'local_dir': '/home/paperspace/ai-server/models/qwen3-4b'
     }
 ]
 
