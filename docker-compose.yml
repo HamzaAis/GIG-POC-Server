@@ -1,0 +1,63 @@
+services:
+  qwen:
+    image: ghcr.io/ggml-org/llama.cpp:server-cuda
+    container_name: qwen2-5-vl
+    ports:
+      - "8050:8050"
+    volumes:
+      - ./models:/models
+    command: >
+      --model /models/qwen2.5-vl-7b/Qwen2.5-VL-7B-Instruct-Q4_K_M.gguf
+      --mmproj /models/qwen2.5-vl-7b/mmproj-BF16.gguf
+      --n-gpu-layers 99
+      --ctx-size 32768
+      --flash-attn on
+      --cache-type-k q8_0
+      --cache-type-v q8_0
+      --port 8050
+      --host 0.0.0.0
+      --batch-size 512
+      --ubatch-size 128
+      --parallel 2
+      --cont-batching
+      --no-warmup
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8050/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  clip:
+    image: michaelf34/infinity:latest
+    container_name: clip-embeddings
+    ports:
+      - "8060:8060"
+    volumes:
+      - ./models:/models
+    command: >
+      v2
+      --model-id /models/clip-vit-base-patch32
+      --port 8060
+      --host 0.0.0.0
+      --device cuda
+      --engine torch
+      --log-level error
+      --batch-size 64
+    environment:
+      - CUDA_VISIBLE_DEVICES=0
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    restart: unless-stopped
