@@ -10,7 +10,7 @@ services:
     command: >
       --model /models/qwen3-4b/Qwen3-4B-Q4_K_M.gguf
       --n-gpu-layers 99
-      --ctx-size 32768
+      --ctx-size 34000
       --flash-attn on
       --cache-type-k q8_0
       --cache-type-v q8_0
@@ -18,7 +18,7 @@ services:
       --host 0.0.0.0
       --batch-size 512
       --ubatch-size 128
-      --parallel 4
+      --parallel 1
       --cont-batching
       --no-warmup
     deploy:
@@ -43,10 +43,10 @@ services:
     volumes:
       - ./models:/models
     command: >
-      --model /models/qwen2.5-vl-7b/Qwen2.5-VL-7B-Instruct-Q4_K_M.gguf
-      --mmproj /models/qwen2.5-vl-7b/mmproj-BF16.gguf
+      --model /models/qwen2.5-vl-3b/Qwen2.5-VL-3B-Instruct-Q4_K_M.gguf
+      --mmproj /models/qwen2.5-vl-3b/mmproj-BF16.gguf
       --n-gpu-layers 99
-      --ctx-size 32768
+      --ctx-size 68000
       --flash-attn on
       --cache-type-k q8_0
       --cache-type-v q8_0
@@ -54,7 +54,7 @@ services:
       --host 0.0.0.0
       --batch-size 512
       --ubatch-size 128
-      --parallel 2
+      --parallel 1
       --cont-batching
       --no-warmup
     deploy:
@@ -71,29 +71,29 @@ services:
       timeout: 10s
       retries: 5
 
-  clip:
-    image: michaelf34/infinity:latest
-    container_name: clip-embeddings
-    ports:
-      - "8060:8060"
-    volumes:
-      - ./models:/models
-    command: >
-      v2
-      --model-id /models/clip-vit-base-patch32
-      --port 8060
-      --host 0.0.0.0
-      --device cuda
-      --engine torch
-      --log-level error
-      --batch-size 64
-    environment:
-      - CUDA_VISIBLE_DEVICES=0
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: all
-              capabilities: [gpu]
-    restart: unless-stopped
+        #clip:
+        #image: michaelf34/infinity:latest
+        #container_name: clip-embeddings
+        #ports:
+        #- "8060:8060"
+        #volumes:
+        #- ./models:/models
+        #command: >
+        #v2
+        #--model-id /models/clip-vit-base-patch32
+        #--port 8060
+        #--host 0.0.0.0
+        #--device cuda
+        #--engine torch
+        #--log-level error
+        #--batch-size 64
+        #environment:
+        #- CUDA_VISIBLE_DEVICES=0
+        #deploy:
+        #resources:
+        #reservations:
+        # devices:
+        #   - driver: nvidia
+        #     count: all
+        #     capabilities: [gpu]
+        #restart: unless-stopped

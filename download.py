@@ -4,9 +4,9 @@ import os
 # Configuration for the models
 models_to_download = [
     {
-        'repo_id': 'unsloth/Qwen2.5-VL-7B-Instruct-GGUF',
-        'files': ['Qwen2.5-VL-7B-Instruct-Q4_K_M.gguf', 'mmproj-BF16.gguf'],
-        'local_dir': '/home/paperspace/ai-server/models/qwen2.5-vl-7b'
+        'repo_id': 'unsloth/Qwen2.5-VL-3B-Instruct-GGUF',
+        'files': ['Qwen2.5-VL-3B-Instruct-Q4_K_M.gguf', 'mmproj-BF16.gguf'],
+        'local_dir': '/home/paperspace/ai-server/models/qwen2.5-vl-3b'
     },
     {
         'repo_id': 'openai/clip-vit-base-patch32',
